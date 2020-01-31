@@ -6,6 +6,21 @@ class VerticalMovement
 {
 public:
     VerticalMovement();
+
+
+
+
+
+    void setPlayerPosition ( );
+
+private:
+
+    float m_gravity;
+    float m_verticalPos;
+    float m_deltaTime;
+    float velocity;
+
+
 };
 
 

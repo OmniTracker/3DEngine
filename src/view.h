@@ -8,6 +8,9 @@
 #include <QTimer>
 #include <memory>
 
+
+#include "application.h"
+
 class Graphics;
 class Camera;
 
@@ -57,7 +60,7 @@ private:
     std::shared_ptr<Camera> m_camera;
 
     // TODO (Warmup 1): Add an application variable to the View class
-
+    Application * app;
 private slots:
     void tick();
 };
