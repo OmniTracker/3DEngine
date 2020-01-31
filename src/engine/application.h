@@ -34,7 +34,6 @@ public:
     bool switchScreen(QString key);
     Screen *currentScreen() const;
     void setCurrentScreen(Screen *currentScreen);
-
     QMap<QString, Screen *> screenMap() const;
 private:
     QMap <QString, Screen *> m_screenMap;
