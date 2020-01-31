@@ -21,6 +21,10 @@ win32 {
 
 SOURCES += \
     libs/glew-1.10.0/src/glew.c \
+    src/engine/application.cpp \
+    src/engine/horizontalmovement.cpp \
+    src/engine/screen.cpp \
+    src/engine/verticalmovement.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/view.cpp \
@@ -50,6 +54,10 @@ HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
     libs/stb/stb_rect_pack.h \
     libs/stb/stb_truetype.h \
+    src/engine/application.h \
+    src/engine/horizontalmovement.h \
+    src/engine/screen.h \
+    src/engine/verticalmovement.h \
     src/mainwindow.h \
     src/view.h \
     src/viewformat.h \
