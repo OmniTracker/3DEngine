@@ -11,6 +11,7 @@ Camera::Camera(glm::vec2 screenSize, glm::vec3 eye, float yaw, float pitch, floa
     m_ui(false),
     m_inverted(false)
 {
+
 }
 
 Camera::~Camera()

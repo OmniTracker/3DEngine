@@ -18,7 +18,11 @@ View::View(QWidget *parent) : QGLWidget(ViewFormat(), parent),
     m_captureMouse(true),
     m_fps(0), m_frameIndex(0),
     m_graphics(nullptr),
-    m_camera(nullptr)
+    m_camera(nullptr),
+    m_application(nullptr),
+    m_cameraHeight(0),
+    m_g( 9.81)
+
 {
     /** SUPPORT CODE START **/
 
@@ -91,16 +95,16 @@ void View::initializeGL()
     // TODO (Lab 1): Initialize camera
     m_camera = std::make_shared<Camera>();
 
-    // TODO (Lab 1): Initialize material
+
     m_camera->setEye(glm::vec3(0, 1, 0));
+    m_graphics->setCamera(m_camera);
 
 
+    // TODO (Lab 1): Initialize material
 
     Material myFirstMaterial;
     myFirstMaterial.color = glm::vec3(0, 1, 0);
     m_graphics->addMaterial("boringGreen", myFirstMaterial);
-
-
 
     Material mySecondMaterial;
     mySecondMaterial.color = glm::vec3(0, 0, 1);
@@ -109,9 +113,10 @@ void View::initializeGL()
 
 
     // TODO (Warmup 1): Initialize application
-    m_graphics->setCamera(m_camera);
+    m_application = std::shared_ptr<Application>();
 
 
+    // m_application->setCurrentScreen(nullptr);
 
 }
 
@@ -130,7 +135,7 @@ void View::paintGL()
     // TODO (Lab 1): Call your game rendering code here
 
 
-    //m_graphics->setMaterial("boringGreen");
+    m_graphics->setMaterial("boringGreen");
 
     m_graphics->setMaterial("other");
 
@@ -148,6 +153,8 @@ void View::paintGL()
     m_graphics->drawShape("quad");
 
     // TODO (Warmup 1): Call your game rendering code here
+
+    m_application->draw(m_graphics);
 
     /** SUPPORT CODE START **/
 
@@ -172,11 +179,13 @@ void View::resizeGL(int w, int h)
     m_camera->setScreenSize(glm::vec2(w, h));
 
     // TODO (Warmup 1): Resize the application
+    // m_application->resize(w, h);
 }
 
 void View::mousePressEvent(QMouseEvent *event)
 {
     // TODO (Warmup 1): Handle mouse press events
+    m_application->mousePressEvent(event);
 }
 
 void View::mouseMoveEvent(QMouseEvent *event)
@@ -209,16 +218,19 @@ void View::mouseMoveEvent(QMouseEvent *event)
     m_camera->rotate(-deltaX / 100.f, -deltaY / 100.f);
 
     // TODO (Warmup 1): Handle mouse movements here
+    // m_application->mouseMoveEvent(event);
 }
 
 void View::mouseReleaseEvent(QMouseEvent *event)
 {
     // TODO (Warmup 1): Handle mouse release here
+    m_application->mouseReleaseEvent(event);
 }
 
 void View::wheelEvent(QWheelEvent *event)
 {
     // TODO (Warmup 1): Handle mouse wheel events here
+    m_application->wheelEvent(event);
 }
 
 void View::keyPressEvent(QKeyEvent *event)
@@ -250,11 +262,16 @@ void View::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_D) m_camera->translate(-perp);
 
     // TODO (Warmup 1): Handle keyboard presses here
+    if(event->key() == Qt::Key_Space) m_jumping = true;
+
+    m_application->keyPressEvent(event);
 }
 
 void View::keyRepeatEvent(QKeyEvent *event)
 {
     // TODO (Warmup 1): Handle key repeats (happens when holding down keys)
+
+    // m_application->keyRepeatEvent(event);
 }
 
 void View::keyReleaseEvent(QKeyEvent *event)
@@ -269,6 +286,7 @@ void View::keyReleaseEvent(QKeyEvent *event)
     /** SUPPORT CODE END **/
 
     // TODO (Warmup 1): Handle key releases
+    m_application->keyReleaseEvent(event);
 }
 
 void View::tick()
@@ -294,9 +312,40 @@ void View::tick()
 
     /** SUPPORT CODE END **/
 
-
     // TODO (Warmup 1): Implement the game update here
 
+    if (m_jumping)
+    {
+        m_position = m_camera->getEye();
+
+        if (m_position.y < 0)
+        {
+           // m_jumping = false;
+
+            m_position.y = 0;
+        }
+
+        m_vel = m_vel + (m_g * m_dt);
+
+        std::cerr << std::to_string( m_vel) << "    " << std::to_string( m_dt) << endl;
+
+
+
+        m_position.y = m_position.y + m_vel;
+
+
+        m_camera->setEye(m_position);
+
+    }
+    else
+    {
+        m_position = m_camera->getEye();
+        m_vel = 0;
+    }
+
+    m_dt = abs( seconds - m_dt);
+
+    m_application->tick(seconds);
 
     /** SUPPORT CODE START **/
 

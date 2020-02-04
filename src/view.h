@@ -60,7 +60,19 @@ private:
     std::shared_ptr<Camera> m_camera;
 
     // TODO (Warmup 1): Add an application variable to the View class
-    Application * app;
+    std::shared_ptr<Application> m_application;
+
+    float m_cameraHeight;
+
+    // Jumping Code
+
+    float m_dt;
+    float m_g;
+    float m_vel;
+    bool m_jumping;
+    glm::vec3 m_position;
+
+
 private slots:
     void tick();
 };
